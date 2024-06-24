@@ -27,3 +27,49 @@ const initialState = {
     },
   ],
 };
+
+const quotesSlice = createSlice({
+  name: "quotes",
+  initialState,
+  reducers: {
+    toggleVisibility: (state) => {
+      state.displayAllQuotes = !state.displayAllQuotes;
+    },
+    deleteQuote: (state, action) => {
+      state.quotes = state.quotes.filter(
+        (quote) => quote.id !== action.payload
+      );
+      if (state.highlightedQuote === action.payload) {
+        state.highlightedQuote = null;
+      }
+    },
+    editQuoteAuthenticity: (state, action) => {
+      const quote = state.quotes.find((quote) => quote.id === action.payload);
+      if (quote) {
+        quote.apocryphal = !quote.apocryphal;
+      }
+    },
+    setHighlightedQuote: (state, action) => {
+      state.highlightedQuote = action.payload;
+    },
+    createQuote: (state, action) => {
+      const newQuote = {
+        id: getNextId(),
+        quoteText: action.payload.quoteText,
+        authorName: action.payload.authorName,
+        apocryphal: false,
+      };
+      state.quotes.push(newQuote);
+    },
+  },
+});
+
+export const {
+  toggleVisibility,
+  deleteQuote,
+  editQuoteAuthenticity,
+  setHighlightedQuote,
+  createQuote,
+} = quotesSlice.actions;
+
+export default quotesSlice.reducer;
