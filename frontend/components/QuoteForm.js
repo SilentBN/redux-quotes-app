@@ -1,6 +1,6 @@
-import React, { useReducer } from "react";
-import { useDispatch } from "react-redux"; // ✨ import the useDispatch hook
-import { createQuote } from "../state/quotesSlice"; // ✨ import the createQuote action
+import React, { useReducer } from "react"; // We import useReducer from React to manage local state in our component.
+import { useDispatch } from "react-redux"; // ✨ We import useDispatch from React Redux to dispatch actions to the Redux store.
+import { createQuote } from "../state/quotesSlice"; // We import the createQuote action creator from our quotesSlice.
 
 const CHANGE_INPUT = "CHANGE_INPUT";
 const RESET_FORM = "RESET_FORM";
@@ -9,6 +9,8 @@ const initialState = {
   authorName: "",
   quoteText: "",
 };
+
+// We define action types, initial state, and a reducer for managing the form's local state.
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -24,8 +26,8 @@ const reducer = (state, action) => {
 };
 
 export default function TodoForm() {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const dispatchRedux = useDispatch(); // ✨ get the dispatch function from the useDispatch hook
+  const [state, dispatch] = useReducer(reducer, initialState); // We use useReducer to manage the form's local state.
+  const dispatchRedux = useDispatch(); // We use useDispatch to get the Redux dispatch function.
 
   const onChange = ({ target: { name, value } }) => {
     dispatch({ type: CHANGE_INPUT, payload: { name, value } });
@@ -44,6 +46,8 @@ export default function TodoForm() {
     );
     resetForm();
   };
+
+  // When the form is submitted, we dispatch the createQuote action to Redux with the form data. We then reset the form using the local state.
 
   return (
     <form id="quoteForm" onSubmit={onNewQuote}>
@@ -80,3 +84,10 @@ export default function TodoForm() {
     </form>
   );
 }
+
+// This component demonstrates an interesting mix of local state management (for the form fields) and Redux state management (for creating a new quote).
+
+// Local state (managed by useReducer) is used for the form inputs because this data doesn't need to be shared with other components and doesn't need to persist beyond the form submission.
+// Redux is used to actually create the new quote because this action affects the global state of the application (the list of all quotes).
+
+// This pattern - using local state for transient UI state and Redux for global application state - is common in React-Redux applications. It allows us to keep our Redux store focused on essential application data while still having the flexibility of local state where appropriate.
